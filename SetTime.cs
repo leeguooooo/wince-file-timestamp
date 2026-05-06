@@ -1104,20 +1104,37 @@ static class Program
 
     private sealed class MainForm : Form
     {
+        private Panel pnlHeader;
+        private Label lblHeaderTitle;
+        private Label lblHeaderSubtitle;
         private Label lblDir;
         private TextBox tbDir;
         private Button btnBrowse;
         private Label lblFilter;
         private TextBox tbFilter;
         private CheckBox cbRecurse;
+        private Label lblApplyTo;
         private CheckBox cbCreation;
         private CheckBox cbModified;
         private CheckBox cbAccessed;
         private Label lblTime;
         private TextBox tbTime;
         private Label lblHint;
+        private Label divider1;
+        private Label divider2;
         private Button btnCancel;
         private Button btnRun;
+
+        // Theme colors (modern flat blue + neutrals)
+        private static readonly Color HeaderBg = Color.FromArgb(0, 122, 255);
+        private static readonly Color HeaderFg = Color.White;
+        private static readonly Color HeaderSubFg = Color.FromArgb(220, 235, 255);
+        private static readonly Color BodyBg = Color.White;
+        private static readonly Color SectionFg = Color.FromArgb(28, 28, 30);
+        private static readonly Color HintFg = Color.FromArgb(120, 120, 128);
+        private static readonly Color DividerBg = Color.FromArgb(229, 229, 234);
+        private static readonly Color PrimaryBg = Color.FromArgb(0, 122, 255);
+        private static readonly Color PrimaryFg = Color.White;
 
         public MainForm()
         {
@@ -1127,99 +1144,176 @@ static class Program
         private void InitializeComponent()
         {
             Text = "SetTime";
-            ClientSize = new System.Drawing.Size(320, 470);
+            ClientSize = new System.Drawing.Size(320, 510);
             FormBorderStyle = FormBorderStyle.FixedSingle;
             MaximizeBox = false;
             MinimizeBox = true;
+            BackColor = BodyBg;
+            Font = new Font("Tahoma", 9F, FontStyle.Regular);
 
+            Font sectionFont = new Font("Tahoma", 9F, FontStyle.Bold);
+            Font hintFont = new Font("Tahoma", 8F, FontStyle.Regular);
+            Font headerTitleFont = new Font("Tahoma", 13F, FontStyle.Bold);
+            Font headerSubFont = new Font("Tahoma", 8F, FontStyle.Regular);
+
+            // Header band
+            pnlHeader = new Panel();
+            pnlHeader.BackColor = HeaderBg;
+            pnlHeader.Location = new System.Drawing.Point(0, 0);
+            pnlHeader.Size = new System.Drawing.Size(320, 56);
+
+            lblHeaderTitle = new Label();
+            lblHeaderTitle.Text = "SetTime";
+            lblHeaderTitle.Font = headerTitleFont;
+            lblHeaderTitle.ForeColor = HeaderFg;
+            lblHeaderTitle.BackColor = HeaderBg;
+            lblHeaderTitle.Location = new System.Drawing.Point(14, 6);
+            lblHeaderTitle.Size = new System.Drawing.Size(290, 22);
+
+            lblHeaderSubtitle = new Label();
+            lblHeaderSubtitle.Text = "\u6587\u4EF6\u65F6\u95F4\u4FEE\u6539";
+            lblHeaderSubtitle.Font = headerSubFont;
+            lblHeaderSubtitle.ForeColor = HeaderSubFg;
+            lblHeaderSubtitle.BackColor = HeaderBg;
+            lblHeaderSubtitle.Location = new System.Drawing.Point(14, 30);
+            lblHeaderSubtitle.Size = new System.Drawing.Size(290, 18);
+
+            pnlHeader.Controls.Add(lblHeaderTitle);
+            pnlHeader.Controls.Add(lblHeaderSubtitle);
+
+            // Section: directory
             lblDir = new Label();
             lblDir.Text = "\u76EE\u5F55";
-            lblDir.Location = new System.Drawing.Point(10, 16);
-            lblDir.Size = new System.Drawing.Size(60, 24);
+            lblDir.Font = sectionFont;
+            lblDir.ForeColor = SectionFg;
+            lblDir.Location = new System.Drawing.Point(12, 70);
+            lblDir.Size = new System.Drawing.Size(80, 20);
 
             tbDir = new TextBox();
-            tbDir.Location = new System.Drawing.Point(10, 42);
-            tbDir.Size = new System.Drawing.Size(230, 24);
+            tbDir.Location = new System.Drawing.Point(12, 92);
+            tbDir.Size = new System.Drawing.Size(226, 24);
+            tbDir.BorderStyle = BorderStyle.FixedSingle;
 
             btnBrowse = new Button();
             btnBrowse.Text = "\u6D4F\u89C8";
-            btnBrowse.Location = new System.Drawing.Point(244, 41);
-            btnBrowse.Size = new System.Drawing.Size(70, 26);
+            btnBrowse.Location = new System.Drawing.Point(242, 91);
+            btnBrowse.Size = new System.Drawing.Size(66, 26);
             btnBrowse.Click += new EventHandler(OnBrowseClick);
 
+            // Section: filter
             lblFilter = new Label();
             lblFilter.Text = "\u6587\u4EF6\u540D\u8FC7\u6EE4";
-            lblFilter.Location = new System.Drawing.Point(10, 82);
-            lblFilter.Size = new System.Drawing.Size(120, 24);
+            lblFilter.Font = sectionFont;
+            lblFilter.ForeColor = SectionFg;
+            lblFilter.Location = new System.Drawing.Point(12, 128);
+            lblFilter.Size = new System.Drawing.Size(140, 20);
 
             tbFilter = new TextBox();
             tbFilter.Text = "*";
-            tbFilter.Location = new System.Drawing.Point(10, 108);
-            tbFilter.Size = new System.Drawing.Size(304, 24);
+            tbFilter.Location = new System.Drawing.Point(12, 150);
+            tbFilter.Size = new System.Drawing.Size(296, 24);
+            tbFilter.BorderStyle = BorderStyle.FixedSingle;
 
             cbRecurse = new CheckBox();
             cbRecurse.Text = "\u5305\u542B\u5B50\u76EE\u5F55";
-            cbRecurse.Location = new System.Drawing.Point(10, 146);
-            cbRecurse.Size = new System.Drawing.Size(180, 24);
+            cbRecurse.ForeColor = SectionFg;
+            cbRecurse.BackColor = BodyBg;
+            cbRecurse.Location = new System.Drawing.Point(12, 184);
+            cbRecurse.Size = new System.Drawing.Size(180, 22);
+
+            // Divider
+            divider1 = new Label();
+            divider1.BackColor = DividerBg;
+            divider1.Location = new System.Drawing.Point(12, 216);
+            divider1.Size = new System.Drawing.Size(296, 1);
+
+            // Section: timestamps to apply
+            lblApplyTo = new Label();
+            lblApplyTo.Text = "\u5E94\u7528\u5230\u4EE5\u4E0B\u65F6\u95F4\u6233";
+            lblApplyTo.Font = sectionFont;
+            lblApplyTo.ForeColor = SectionFg;
+            lblApplyTo.Location = new System.Drawing.Point(12, 226);
+            lblApplyTo.Size = new System.Drawing.Size(200, 20);
 
             cbCreation = new CheckBox();
-            cbCreation.Text = "\u521B\u5EFA\u65F6\u95F4";
+            cbCreation.Text = "\u521B\u5EFA";
             cbCreation.Checked = true;
-            cbCreation.Location = new System.Drawing.Point(10, 174);
-            cbCreation.Size = new System.Drawing.Size(95, 24);
+            cbCreation.ForeColor = SectionFg;
+            cbCreation.BackColor = BodyBg;
+            cbCreation.Location = new System.Drawing.Point(12, 250);
+            cbCreation.Size = new System.Drawing.Size(80, 22);
 
             cbModified = new CheckBox();
-            cbModified.Text = "\u4FEE\u6539\u65F6\u95F4";
+            cbModified.Text = "\u4FEE\u6539";
             cbModified.Checked = true;
-            cbModified.Location = new System.Drawing.Point(110, 174);
-            cbModified.Size = new System.Drawing.Size(95, 24);
+            cbModified.ForeColor = SectionFg;
+            cbModified.BackColor = BodyBg;
+            cbModified.Location = new System.Drawing.Point(108, 250);
+            cbModified.Size = new System.Drawing.Size(80, 22);
 
             cbAccessed = new CheckBox();
-            cbAccessed.Text = "\u8BBF\u95EE\u65F6\u95F4";
+            cbAccessed.Text = "\u8BBF\u95EE";
             cbAccessed.Checked = true;
-            cbAccessed.Location = new System.Drawing.Point(210, 174);
-            cbAccessed.Size = new System.Drawing.Size(95, 24);
+            cbAccessed.ForeColor = SectionFg;
+            cbAccessed.BackColor = BodyBg;
+            cbAccessed.Location = new System.Drawing.Point(204, 250);
+            cbAccessed.Size = new System.Drawing.Size(80, 22);
 
+            // Divider
+            divider2 = new Label();
+            divider2.BackColor = DividerBg;
+            divider2.Location = new System.Drawing.Point(12, 282);
+            divider2.Size = new System.Drawing.Size(296, 1);
+
+            // Section: target time
             lblTime = new Label();
             lblTime.Text = "\u76EE\u6807\u65F6\u95F4";
-            lblTime.Location = new System.Drawing.Point(10, 216);
-            lblTime.Size = new System.Drawing.Size(120, 24);
+            lblTime.Font = sectionFont;
+            lblTime.ForeColor = SectionFg;
+            lblTime.Location = new System.Drawing.Point(12, 292);
+            lblTime.Size = new System.Drawing.Size(140, 20);
 
             tbTime = new TextBox();
-            tbTime.Location = new System.Drawing.Point(10, 242);
-            tbTime.Size = new System.Drawing.Size(304, 24);
+            tbTime.Location = new System.Drawing.Point(12, 314);
+            tbTime.Size = new System.Drawing.Size(296, 24);
+            tbTime.BorderStyle = BorderStyle.FixedSingle;
 
             lblHint = new Label();
-            lblHint.Text = "\u652F\u6301\u793A\u4F8B\uFF1A\r\n" +
-                "2026-05-06 14:30:00\r\n" +
-                "2026-05-06 14:30\r\n" +
-                "2026/05/06 14:30\r\n" +
-                "2026-5-6\r\n" +
-                "2026\u5E745\u67086\u65E5 14\u70B930\u5206";
-            lblHint.Location = new System.Drawing.Point(10, 282);
-            lblHint.Size = new System.Drawing.Size(304, 110);
+            lblHint.Text = "\u652F\u6301\u793A\u4F8B\uFF1A2026-05-06 14:30:00 \u00B7 2026/5/6 \u00B7 2026\u5E745\u67086\u65E5 14:30 \u00B7 \u53EA\u586B\u65E5\u671F\u9ED8\u8BA4 00:00";
+            lblHint.Font = hintFont;
+            lblHint.ForeColor = HintFg;
+            lblHint.Location = new System.Drawing.Point(12, 344);
+            lblHint.Size = new System.Drawing.Size(296, 60);
 
+            // Buttons
             btnCancel = new Button();
             btnCancel.Text = "\u53D6\u6D88";
-            btnCancel.Location = new System.Drawing.Point(154, 416);
-            btnCancel.Size = new System.Drawing.Size(74, 30);
+            btnCancel.Location = new System.Drawing.Point(154, 460);
+            btnCancel.Size = new System.Drawing.Size(74, 32);
             btnCancel.Click += new EventHandler(OnCancelClick);
 
             btnRun = new Button();
             btnRun.Text = "\u4FEE\u6539";
-            btnRun.Location = new System.Drawing.Point(240, 416);
-            btnRun.Size = new System.Drawing.Size(74, 30);
+            btnRun.Font = sectionFont;
+            btnRun.BackColor = PrimaryBg;
+            btnRun.ForeColor = PrimaryFg;
+            btnRun.Location = new System.Drawing.Point(234, 460);
+            btnRun.Size = new System.Drawing.Size(74, 32);
             btnRun.Click += new EventHandler(OnRunClick);
 
+            Controls.Add(pnlHeader);
             Controls.Add(lblDir);
             Controls.Add(tbDir);
             Controls.Add(btnBrowse);
             Controls.Add(lblFilter);
             Controls.Add(tbFilter);
             Controls.Add(cbRecurse);
+            Controls.Add(divider1);
+            Controls.Add(lblApplyTo);
             Controls.Add(cbCreation);
             Controls.Add(cbModified);
             Controls.Add(cbAccessed);
+            Controls.Add(divider2);
             Controls.Add(lblTime);
             Controls.Add(tbTime);
             Controls.Add(lblHint);
