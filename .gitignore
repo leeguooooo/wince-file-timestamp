@@ -1,0 +1,14 @@
+*.exe
+*.pdb
+*.suo
+*.user
+.vs/
+bin/
+obj/
+
+# OS / IDE
+.DS_Store
+Thumbs.db
+.idea/
+.vscode/
+*.swp
